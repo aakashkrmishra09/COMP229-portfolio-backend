@@ -16,48 +16,79 @@ import userRoutes from './routes/userRoutes.js';
 // Load environment variables
 dotenv.config();
 
-// Connect to MongoDB [cite: 45]
+// Connect to MongoDB
 connectDB();
 
 const app = express();
 
-// Middleware setup [cite: 46]
-app.use(cors());
+// --- 🛑 CORS FIX STARTS HERE 🛑 ---
+
+// Define the origins (domains) that are allowed to access your API.
+// 1. http://localhost:5173: Your local Vite development server.
+// 2. http://localhost:3000: Your local backend server (for testing locally).
+// 3. YOUR_DEPLOYED_FRONTEND_URL: The live URL of your Vercel/Netlify site.
+
+const allowedOrigins = [
+    'http://localhost:5173', 
+    'http://localhost:3000', 
+    // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    // *** CRITICAL: REPLACE THE PLACEHOLDER BELOW with your live Vercel/Netlify URL ***
+    'https://aakash-kumar-mishra-portfolio.vercel.app' 
+    // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+];
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps, curl, or server-to-server)
+    if (!origin) return callback(null, true); 
+    
+    // Check if the requesting origin is in the allowed list
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Explicitly allow all CRUD methods
+  credentials: true,
+};
+
+// Middleware setup
+app.use(cors(corsOptions)); // <-- Now using the strict, secure configuration!
 app.use(express.json());
 app.use(morgan('dev'));
 
+// --- CORS FIX ENDS HERE ---
+
 const PORT = process.env.PORT || 3000;
 
-// Root Route [cite: 34, 35]
+// Root Route
 app.get('/', (req, res) => {
-  res.json({ message: "Welcome to My Portfolio application." });
+  res.json({ message: "Welcome to My Portfolio application." });
 });
 
 // --- API ROUTES ---
-// Tell the app to use your route files for any URL starting with these paths
-app.use('/api/contacts', contactRoutes); // [cite: 53]
-app.use('/api/projects', projectRoutes); // [cite: 55]
-app.use('/api/services', serviceRoutes); // [cite: 57]
-app.use('/api/users', userRoutes);       // [cite: 59]
+app.use('/api/contacts', contactRoutes);
+app.use('/api/projects', projectRoutes);
+app.use('/api/services', serviceRoutes);
+app.use('/api/users', userRoutes);
 
 // --- ERROR HANDLING MIDDLEWARE ---
-// This catches any requests to a URL that doesn't exist
 app.use((req, res, next) => {
-  next(createError(404, 'Not Found'));
+  next(createError(404, 'Not Found'));
 });
 
-// This is the main error handler that sends back a JSON error response [cite: 47]
 app.use((err, req, res, next) => {
-  res.status(err.status || 500);
-  res.json({
-    error: {
-      status: err.status || 500,
-      message: err.message,
-    },
-  });
+  res.status(err.status || 500);
+  res.json({
+    error: {
+      status: err.status || 500,
+      message: err.message,
+    },
+  });
 });
 
 // Start Server
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
