@@ -21,7 +21,7 @@ router.route('/')
 // Route for getting, updating, and deleting a single project by its ID
 router.route('/:id')
   .get(getProjectById)        // GET /api/projects/:id
-  .put(updateProjectById)     // PUT /api/projects/:id
+  .put(projectController.updateProjectById)     // PUT /api/projects/:id
   .delete(removeProjectById); // DELETE /api/projects/:id
 
 export default router;
