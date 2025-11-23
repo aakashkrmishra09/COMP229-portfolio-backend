@@ -21,8 +21,6 @@ connectDB();
 
 const app = express();
 
-// --- 🛑 CORS FIX STARTS HERE 🛑 ---
-
 // Define the origins (domains) that are allowed to access your API.
 // 1. http://localhost:5173: Your local Vite development server.
 // 2. http://localhost:3000: Your local backend server (for testing locally).
@@ -57,8 +55,6 @@ const corsOptions = {
 app.use(cors(corsOptions)); // <-- Now using the strict, secure configuration!
 app.use(express.json());
 app.use(morgan('dev'));
-
-// --- CORS FIX ENDS HERE ---
 
 const PORT = process.env.PORT || 3000;
 
