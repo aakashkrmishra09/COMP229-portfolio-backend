@@ -32,7 +32,7 @@ const allowedOrigins = [
     'http://localhost:5173', 
     'http://localhost:3000', 
     // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-    // *** CRITICAL: REPLACE THE PLACEHOLDER BELOW with your live Vercel/Netlify URL ***
+    
     'https://aakash-kumar-mishra-portfolio.vercel.app' 
     // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 ];
